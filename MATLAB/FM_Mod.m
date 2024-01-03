@@ -1,0 +1,57 @@
+clc;
+clearvars;
+close all;
+Fs = 10000;  fm = 100;
+t = 0:1/Fs:0.1;  Am = 1;  
+message_signal = Am * cos(2*pi*fm*t);
+fc = 1000; A=1;
+modulation_index=1;
+modulation_index1=2;
+
+V=A*cos(2*pi*fc*t+modulation_index*sin(2*pi*fm*t));
+V1=A*cos(2*pi*fc*t+modulation_index1*sin(2*pi*fm*t));
+
+demodulated_signal = fmdemod(V, fc, Fs, modulation_index);
+demodulated_signal1 = fmdemod(V1, fc, Fs, modulation_index1);
+
+N = length(V);
+fft_result = fftshift(fft(V)) / N;
+frequencies = linspace(-Fs/2, Fs/2, N);
+N = length(V1);
+fft_result1 = fftshift(fft(V1)) / N;
+
+subplot(4, 2, 1);
+plot(t,message_signal);
+title('Message Signal');
+xlabel('Time (s)');
+ylabel('Amplitude');
+subplot(4, 2, 2);
+plot(t,V);
+title('FM for beta=1');
+xlabel('Time (s)');
+ylabel('Amplitude');
+subplot(4, 2, 3);
+plot(t,V1);
+title('FM for beta=2');
+xlabel('Time (s)');
+ylabel('Amplitude');
+subplot(4, 2, 4);
+plot(t,demodulated_signal);
+title('FM demodulated signal for beta=1');
+xlabel('Time (s)');
+ylabel('Amplitude');
+subplot(4, 2, 5);
+plot(t,demodulated_signal1);
+title('FM demodulated signal for beta=2');
+xlabel('Time (s)');
+ylabel('Amplitude');
+subplot(4, 2, 6);
+plot((frequencies), abs(fft_result));
+title('Frequency spectrum for FM modulated signal (beta=1)');
+xlabel('frequencies');
+ylabel('Amplitude');
+subplot(4, 2, 7);
+plot((frequencies), abs(fft_result1));
+title('Frequency spectrum for FM modulated signal (beta=2)');
+xlabel('frequencies');
+ylabel('Amplitude');
